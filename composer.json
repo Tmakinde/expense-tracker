@@ -1,0 +1,28 @@
+{
+    "name": "fintech-apps/expense-tracker",
+    "description": "This is a package for anyone building a banking/fintech application in Laravel to be able to seamlessly integrate an expense tracker feature into their application",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "illuminate/config": "^8.0 || ^9.0 || ^10.0",
+        "illuminate/database": "^8.0 || ^9.0 || ^10.0",
+        "illuminate/support": "^8.0 || ^9.0 || ^10.0",
+        "php": "^8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "FintechApps\\ExpenseTracker\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "tmakinde",
+            "email": "makindet74@gmail.com"
+        },
+        {
+            "name": "Jesutomiwa Salam",
+            "email": "Jesutomiwathefirst@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
