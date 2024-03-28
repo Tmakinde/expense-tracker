@@ -3,10 +3,15 @@
 namespace Tmakinde\ExpenseTracker\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Tmakinde\ExpenseTracker\Contract\ExpenseInterface;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Expense extends Model {
+class Expense extends Model implements ExpenseInterface
+{
+    protected $fillables = ['*'];
 
-    public function category() {
+    public function category() : HasMany
+    {
         return $this->hasMany(Expense::class);
     }
 
