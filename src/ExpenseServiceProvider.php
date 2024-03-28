@@ -1,6 +1,7 @@
 <?php
 
 namespace Tmakinde\ExpenseTracker;
+use Tmakinde\ExpenseTracker\ExpenseManager;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -14,6 +15,6 @@ class ExpenseServiceProvider extends ServiceProvider {
 
     public function register() : void
     {
-
+        $this->app->bind(ExpenseManager::class, fn(Application $app) => new ExpenseManager($app));
     }
 }
