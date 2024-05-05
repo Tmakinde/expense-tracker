@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Expense extends Model implements ExpenseInterface
 {
-    protected $fillables = ['*'];
+    protected $guarded = ['id'];
 
     public function category() : HasMany
     {
