@@ -7,20 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use Tmakinde\ExpenseTracker\Contract\ExpenseInterface;
 use Tmakinde\ExpenseTracker\Model\Expense;
 use Carbon;
+use DateTime;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class ExpenseQueryBuilder implements ExpenseQueryBuilderInterface
 {
 
-    public function __construct(protected Application $app, protected $config, protected $model)
+    public function __construct(protected $user)
     {
-        $this->app = $app;
-        $this->config = $app['config'];
         $this->model = $this->resolveModel();
+        $this->user = $user;
     }
 
-    private function resolveModel() : ExpenseInterface
+    private function resolveModel() : Builder
     {
-        return new Expense()->where('user_id', $this->app->expenseUser);
+        print($this->user->id);
+        return Expense::where('user_id', $this->user->id);
     }
 
     public function whereCategory(Model $category) : self
@@ -29,24 +32,19 @@ class ExpenseQueryBuilder implements ExpenseQueryBuilderInterface
         return $this;
     }
 
-    public function between(string $dateFrom, string $dateTo) : self
+    public function between(Datetime $dateFrom, DateTime $dateTo) : self
     {
-        $this->model = $this->model->filter(function($item) use($dateTo, $dateFrom) {
-            if (Carbon::now()->between($dateFrom, $dateTo)) {
-                return $item;
-            }
-        });
-
+        $this->model = $this->model->whereBetween('created_at', [$dateFrom, $dateTo]);
         return $this;
     }
 
-    public function groupByCategory() : self
+    public function groupByCategory() : Collection
     {
         $this->model = $this->model->groupBy('category');
-        return $this;
+        return $this->get();
     }
 
-    public function get() : ExpenseInterface
+    public function get() : Collection
     {
         return $this->model->get();
     }
