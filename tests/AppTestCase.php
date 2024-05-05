@@ -18,7 +18,6 @@ class AppTestCase extends TestbenchTestCase
         parent::setUp();
         self::runMigrationsUp('up');
         $this->executeFixtures();
-        $user = User::first();
     }
 
     public static function setUpBeforeClass(): void
@@ -54,7 +53,7 @@ class AppTestCase extends TestbenchTestCase
         return;
     }
 
-    protected function executeFixtures()
+    protected function executeFixtures() : void
     {
         User::create($this->getUsersFixtureData());
         Category::create($this->getCategoriesFixtureData());
@@ -63,7 +62,7 @@ class AppTestCase extends TestbenchTestCase
         }
     }
 
-    protected function getCategoriesFixtureData()
+    protected function getCategoriesFixtureData() : array
     {
         return [
                 'id' => fake()->randomNumber(1),
@@ -72,7 +71,7 @@ class AppTestCase extends TestbenchTestCase
             ];
     }
 
-    protected function getExpensesFixtureData()
+    protected function getExpensesFixtureData() : array
     {
         $expenses = [];
         $categories = Category::all();
@@ -91,7 +90,7 @@ class AppTestCase extends TestbenchTestCase
         return $expenses;
     }
 
-    protected function getUsersFixtureData()
+    protected function getUsersFixtureData() : array
     {
         return
             [
@@ -107,7 +106,7 @@ class AppTestCase extends TestbenchTestCase
      *
      * @return void
      */
-    protected function defineEnvironment($app)
+    protected function defineEnvironment($app) : void
     {
         // Setup default database to use sqlite :memory:
         tap($app->make('config'), function (Repository $config) {

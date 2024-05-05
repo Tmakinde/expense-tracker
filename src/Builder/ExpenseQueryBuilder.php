@@ -22,7 +22,6 @@ class ExpenseQueryBuilder implements ExpenseQueryBuilderInterface
 
     private function resolveModel() : Builder
     {
-        print($this->user->id);
         return Expense::where('user_id', $this->user->id);
     }
 
