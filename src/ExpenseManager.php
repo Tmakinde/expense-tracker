@@ -17,7 +17,10 @@ class ExpenseManager {
 
     public function for(Model $user) : ExpenseQueryBuilder
     {
-        $this->app->expenseUser = $user;
-        return $this->app[ExpenseQueryBuilder::class];
+        return $this->app->makeWith(ExpenseQueryBuilder::class,
+            [
+                'user' => $user
+            ]
+        );
     }
 }
