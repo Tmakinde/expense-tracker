@@ -18,7 +18,7 @@ class CreateExpensesTable extends Migration
             $table->string('user_type')->nullable();
             $table->bigInteger('user_id');
             $table->foreignId('category_id');
-            $table->foreign('category_id')->on('categories')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreign('category_id')->references('categories')->on('id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('amount');
             $table->string('currency', 3);
             $table->timestamps();
