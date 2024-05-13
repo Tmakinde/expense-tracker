@@ -13,7 +13,7 @@ class CreateUserLImitsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_limits', function (Blueprint $table) {
+        Schema::create('users_limits', function (Blueprint $table) {
             $table->id();
             $table->string('user_type')->nullable();
             $table->bigInteger('user_id');
