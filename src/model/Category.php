@@ -5,11 +5,11 @@ use Tmakinde\ExpenseTracker\Model\Expense;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Tmakinde\ExpenseTracker\Trait\InteractsWithUserLimit;
+use Tmakinde\ExpenseTracker\Trait\CategoryLimitInteraction;
 
 class Category extends Model
 {
-    use InteractsWithUserLimit;
+    use CategoryLimitInteraction;
 
     protected $guarded = ['id'];
 
