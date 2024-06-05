@@ -8,9 +8,13 @@ use Illuminate\Support\ServiceProvider;
 class ExpenseServiceProvider extends ServiceProvider {
     public function boot() : void
     {
-        $this->publishesMigrations([
-            __DIR__.'/../database/migrations' => database_path('migrations'),
-        ]);
+        $this->publishes([
+            __DIR__.'/../database/migrations' => database_path('migrations/expenses'),
+        ], 'expenses-migrations');
+
+        $this->publishes([
+            __DIR__ . '/config' => config_path('config/expenses')
+        ], 'expenses-config');
     }
 
     public function register() : void
