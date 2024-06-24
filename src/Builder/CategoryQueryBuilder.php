@@ -2,6 +2,7 @@
 
 namespace Tmakinde\ExpenseTracker\Builder;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Tmakinde\ExpenseTracker\Contract\CategoryQueryBuilderInterface;
 use Tmakinde\ExpenseTracker\Model\Category;
@@ -10,19 +11,32 @@ class CategoryQueryBuilder implements CategoryQueryBuilderInterface
 {
     protected $model;
 
-    public function __construct()
+    public function __construct(protected $user)
     {
+        $this->user = $user;
         $this->model = $this->resolveModel();
     }
 
-    private function resolveModel() : Category
+    private function resolveModel() : Builder
     {
-        return Category::class;
+        return Category::where('user_id', $this->user->id);
     }
 
     public function create(array $data) : Category
     {
         return $this->model->create($data);
+    }
+
+    public function active() : self
+    {
+        $this->model = $this->model->where('is_active', 1);
+        return $this;
+    }
+
+    public function inactive() : self
+    {
+        $this->model = $this->model->where('is_active', 0);
+        return $this;
     }
 
     public function get() : Collection
