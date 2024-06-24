@@ -2,7 +2,7 @@
 
 namespace Tmakinde\ExpenseTracker;
 
-use Tmakinde\ExpenseTracker\Enum\ExpensesStatus;
+use Tmakinde\ExpenseTracker\Enum\CategoryStatus;
 use Tmakinde\ExpenseTracker\Contract\ExpenseInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;

@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Collection;
 class ExpenseQueryBuilder implements ExpenseQueryBuilderInterface
 {
 
+    protected $model;
+
     public function __construct(protected $user)
     {
         $this->model = $this->resolveModel();
