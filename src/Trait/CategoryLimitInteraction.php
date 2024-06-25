@@ -1,9 +1,10 @@
 <?php
 namespace Tmakinde\ExpenseTracker\Trait;
 
-use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Tmakinde\ExpenseTracker\Enum\LimitType;
+use Tmakinde\ExpenseTracker\Exceptions\InvalidModelException;
+use Tmakinde\ExpenseTracker\Exceptions\InvalidTypeException;
 use Tmakinde\ExpenseTracker\Model\UsersLimits;
 
 trait CategoryLimitInteraction
@@ -26,17 +27,21 @@ trait CategoryLimitInteraction
     public function createLimit(string $limitType, float $amount) : UsersLimits
     {
         if (!isset($this->userLimit->user_id)) {
-            throw new Exception('Set user id for limit');
+            throw InvalidModelException::LogError('Set user id for limit');
         }
 
         if ($this->validateEnumType($limitType)) {
-            throw new Exception('Invalid limit type');
+            throw InvalidTypeException::LogError('Invalid limit type');
         }
 
-        $this->userLimit->limit_type = $limitType;
-        $this->userLimit->amount = $amount;
-        $this->userLimit->currency = data_get(app()->configPath('expense_tracker_config'), 'currency');
-        $this->save();
+        try {
+            $this->userLimit->limit_type = $limitType;
+            $this->userLimit->amount = $amount;
+            $this->userLimit->currency = data_get(app()->configPath('expense_tracker_config'), 'currency');
+            $this->save();
+        } catch (\Throwable $ex) {
+            throw InvalidModelException::LogError($ex->getMessage());
+        }
         return $this->userLimit;
     }
 
