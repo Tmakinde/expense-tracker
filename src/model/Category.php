@@ -41,4 +41,24 @@ class Category extends Model
         return UsersLimits::where('user_id', $this->user_id)->where('category_id', $this->id)->first();
     }
 
+    public function scopeMarkAsInactive($query, $categoryId)
+    {
+        return $query->where('id', $categoryId)->update(['is_active' => 0]);
+    }
+
+    public function scopeMarkAsActive($query, $categoryId)
+    {
+        return $query->where('id', $categoryId)->update(['is_active' => 1]);
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('is_active', 0);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
+
 }
