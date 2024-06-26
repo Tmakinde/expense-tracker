@@ -23,6 +23,7 @@ class CreateUserLImitsTable extends Migration
             $table->string('amount');
             $table->string('currency', 3);
             $table->timestamps();
+            $table->unique(['user_type', 'user_id', 'category_id', 'limit_type'], 'user_category_limit_unique');
         });
     }
 
