@@ -4,6 +4,7 @@ namespace Tmakinde\ExpenseTracker\Builder;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Tmakinde\ExpenseTracker\Contract\CategoryQueryBuilderInterface;
 
 class CategoryQueryBuilder implements CategoryQueryBuilderInterface
@@ -13,15 +14,15 @@ class CategoryQueryBuilder implements CategoryQueryBuilderInterface
     public function __construct(protected $user)
     {
         $this->user = $user;
-        $this->model = $this->resolveModel();
+        $this->resolveModel();
     }
 
-    private function resolveModel() : Builder
+    private function resolveModel()
     {
         $this->model = $this->user->categories();
         return $this->model;
     }
-    
+
     public function whereLimitType(string $type) : self
     {
         $this->model = $this->model->whereHas('users_limits', function($query) use ($type) {
