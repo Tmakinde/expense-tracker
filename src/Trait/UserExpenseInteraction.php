@@ -10,7 +10,7 @@ trait UserExpenseInteraction
     public function createExpense(float $amount, Category $category)
     {
         return Expense::create([
-            'user_type' => (new \Reflection(static::class))->getNamespaceName(),
+            'user_type' => (new \ReflectionClass(static::class))->getName(),
             'user_id' => $this->id,
             'category_id' => $category->id,
             'amount' => $amount,

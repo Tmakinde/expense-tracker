@@ -6,7 +6,7 @@ use Tmakinde\ExpenseTracker\Enum\LimitType;
 use Tmakinde\ExpenseTracker\Exceptions\InvalidModelException;
 use Tmakinde\ExpenseTracker\Exceptions\InvalidTypeException;
 use Tmakinde\ExpenseTracker\Model\UsersLimits;
-
+use Tmakinde\ExpenseTracker\Utils\Utils;
 trait CategoryLimitInteraction
 {
     protected $userLimit;
@@ -18,19 +18,10 @@ trait CategoryLimitInteraction
         return $this;
     }
 
-    private function validateEnumType(string $limitType) : bool
+    public function createLimit(string $limitType, float $amount) : self
     {
-        $enum = LimitType::getAllTypes();
-        return !in_array($limitType, $enum) ? false : true;
-    }
 
-    public function createLimit(string $limitType, float $amount) : UsersLimits
-    {
-        if (!isset($this->userLimit->user_id)) {
-            throw InvalidModelException::LogError('Set user id for limit');
-        }
-
-        if ($this->validateEnumType($limitType)) {
+        if (!Utils::validateEnumType($limitType)) {
             throw InvalidTypeException::LogError('Invalid limit type');
         }
 
@@ -46,12 +37,16 @@ trait CategoryLimitInteraction
         return $this;
     }
 
-    public function for(Model $user) : self
+    public function for(Model $user) : UsersLimits
     {
-        $this->userLimit->user_type = (new \ReflectionClass($user))->getNamespaceName();
-        $this->userLimit->user_id = $user->id;
-        $this->save();
-        return $this;
+        try {
+            $this->userLimit->user_type = (new \ReflectionClass($user))->getName();
+            $this->userLimit->user_id = $user->id;
+            $this->save();
+        } catch (\Throwable $ex) {
+            throw InvalidModelException::LogError($ex->getMessage());
+        }
+        return $this->userLimit;
     }
 
 }
