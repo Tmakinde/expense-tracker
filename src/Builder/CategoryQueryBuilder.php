@@ -5,9 +5,6 @@ namespace Tmakinde\ExpenseTracker\Builder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Tmakinde\ExpenseTracker\Contract\CategoryQueryBuilderInterface;
-use Tmakinde\ExpenseTracker\Exceptions\DuplicateTypeException;
-use Tmakinde\ExpenseTracker\Exceptions\InvalidModelException;
-use Tmakinde\ExpenseTracker\Model\Category;
 
 class CategoryQueryBuilder implements CategoryQueryBuilderInterface
 {
@@ -21,31 +18,23 @@ class CategoryQueryBuilder implements CategoryQueryBuilderInterface
 
     private function resolveModel() : Builder
     {
-        return Category::where('user_id', $this->user->id);
+        $this->model = $this->user->categories();
+        return $this->model;
     }
-
-    public function create(array $data) : Category
+    
+    public function whereLimitType(string $type) : self
     {
-        $category = $this->model->where('name', $data['name'])->first();
-        if ($category) {
-            throw DuplicateTypeException::LogError('Category already exists');
-        }
-        try {
-            return $this->model->create($data);
-        } catch (\Throwable $ex) {
-            throw InvalidModelException::LogError($ex->getMessage());
-        }
-    }
-
-    public function active() : self
-    {
-        $this->model = $this->model->where('is_active', 1);
+        $this->model = $this->model->whereHas('users_limits', function($query) use ($type) {
+            $query->where('type', $type);
+        });
         return $this;
     }
 
-    public function inactive() : self
+    public function whereLimitAmountBetween(int $min, int $max): self
     {
-        $this->model = $this->model->where('is_active', 0);
+        $this->model = $this->model->whereHas('users_limits', function($query) use ($min, $max) {
+            $query->whereBetween('amount', [$min, $max]);
+        });
         return $this;
     }
 

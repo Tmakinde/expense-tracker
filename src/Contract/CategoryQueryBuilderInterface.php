@@ -6,7 +6,7 @@ use Tmakinde\ExpenseTracker\Model\Category;
 
 interface CategoryQueryBuilderInterface {
 
-    public function create(array $data) : Category;
-
     public function get() : Collection;
+    public function whereLimitType(string $type) : CategoryQueryBuilderInterface;
+    public function whereLimitAmountBetween(int $min, int $max) : CategoryQueryBuilderInterface;
 }
