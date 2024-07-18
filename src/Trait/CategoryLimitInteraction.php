@@ -34,22 +34,23 @@ trait CategoryLimitInteraction
             throw InvalidTypeException::LogError('Invalid limit type');
         }
 
+        $this->resolveUserLimit();
+
         try {
             $this->userLimit->limit_type = $limitType;
             $this->userLimit->amount = $amount;
             $this->userLimit->currency = data_get(app()->configPath('expense_tracker_config'), 'currency');
-            $this->save();
         } catch (\Throwable $ex) {
             throw InvalidModelException::LogError($ex->getMessage());
         }
-        return $this->userLimit;
+        return $this;
     }
 
     public function for(Model $user) : self
     {
-        $this->resolveUserLimit();
-        $this->userLimit->user_type = (new \Reflection($user))->getNamespaceName();
+        $this->userLimit->user_type = (new \ReflectionClass($user))->getNamespaceName();
         $this->userLimit->user_id = $user->id;
+        $this->save();
         return $this;
     }
 

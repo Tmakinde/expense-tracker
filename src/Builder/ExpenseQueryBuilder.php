@@ -4,9 +4,7 @@ namespace Tmakinde\ExpenseTracker\Builder;
 
 use Tmakinde\ExpenseTracker\Contract\ExpenseQueryBuilderInterface;
 use Illuminate\Database\Eloquent\Model;
-use Tmakinde\ExpenseTracker\Contract\ExpenseInterface;
 use Tmakinde\ExpenseTracker\Model\Expense;
-use Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
