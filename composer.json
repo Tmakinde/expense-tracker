@@ -1,5 +1,5 @@
 {
-    "name": "fintech-apps/expense-tracker",
+    "name": "Tmakinde/expensetracker",
     "description": "This is a package for anyone building a banking/fintech application in Laravel to be able to seamlessly integrate an expense tracker feature into their application",
     "type": "library",
     "license": "MIT",
@@ -35,7 +35,9 @@
     },
     "require-dev": {
         "orchestra/testbench": "8.x-dev",
-        "phpunit/phpunit": "10.5.x-dev"
+        "phpunit/phpunit": "10.5.x-dev",
+        "phpstan/phpstan": "1.11.x-dev",
+        "friendsofphp/php-cs-fixer": "dev-master"
     },
     "scripts": {
         "post-autoload-dump": [
