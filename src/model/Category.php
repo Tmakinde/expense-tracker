@@ -7,10 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Tmakinde\ExpenseTracker\Trait\CategoryLimitInteraction;
 use Tmakinde\ExpenseTracker\Enum\CategoryStatus;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class Category extends Model
 {
     use CategoryLimitInteraction;
+
+    protected $fillable = ['name', 'is_active',];
 
     protected $guarded = ['id'];
 
@@ -19,39 +23,35 @@ class Category extends Model
         return $this->belongsTo(Expense::class);
     }
 
-    protected function status(): Attribute
+    public function getCategoryStatus(Model $user)
     {
-        return Attribute::make(
-            get: fn () => $this->getCategoryStatus()
-        );
-    }
-
-    protected function getCategoryStatus()
-    {
-        $totalExpenses = Expense::where('category_id', $this->id)->where('user_id', $this->user->id)->sum('amount');
-        $categoryLimit = $this->getUserCategoryLimit()->amount;
+        $totalExpenses = Expense::where('category_id', $this->id)->where('user_id', $user->id)->where('user_type', (new \ReflectionClass($user))->getName())->sum('amount');
+        $categoryLimit = $this->getUserCategoryLimit($user)?->amount;
+        if (is_null($categoryLimit)) {
+            return CategoryStatus::NO_LIMIT;
+        }
         if ($totalExpenses == $categoryLimit) {
             return CategoryStatus::BALANCED;
         }
         return $totalExpenses > $categoryLimit ? CategoryStatus::EXCEEDED : CategoryStatus::NOT_EXCEEDED;
     }
 
-    protected function getUserCategoryLimit() : UsersLimits
+    protected function getUserCategoryLimit(Model $user) : ?UsersLimits
     {
-        return UsersLimits::where('user_id', $this->user_id)->where('category_id', $this->id)->first();
+        return UsersLimits::where('user_id', $user->id)->where('user_type', (new \ReflectionClass($user))->getName())->where('category_id', $this->id)->first();
     }
 
-    public function scopeMarkAsInactive($query, $categoryId)
+    public function scopeMarkAsInactive(Builder $query, $categoryId)
     {
         return $query->where('id', $categoryId)->update(['is_active' => 0]);
     }
 
-    public function scopeMarkAsActive($query, $categoryId)
+    public function scopeMarkAsActive(Builder $query, $categoryId)
     {
         return $query->where('id', $categoryId)->update(['is_active' => 1]);
     }
 
-    public function scopeInactive($query)
+    public function scopeInActive(Builder $query)
     {
         return $query->where('is_active', 0);
     }

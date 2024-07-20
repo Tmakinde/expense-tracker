@@ -6,6 +6,8 @@ abstract class CategoryStatus
     public const BALANCED = 'balanced';
     public const EXCEEDED = 'exceeded';
     public const NOT_EXCEEDED = 'not_exceeded';
+    public const NO_LIMIT = 'no_limit';
+
 
     public static function getAllStatuses() : array
     {

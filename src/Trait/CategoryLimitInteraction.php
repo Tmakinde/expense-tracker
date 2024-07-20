@@ -2,7 +2,6 @@
 namespace Tmakinde\ExpenseTracker\Trait;
 
 use Illuminate\Database\Eloquent\Model;
-use Tmakinde\ExpenseTracker\Enum\LimitType;
 use Tmakinde\ExpenseTracker\Exceptions\InvalidModelException;
 use Tmakinde\ExpenseTracker\Exceptions\InvalidTypeException;
 use Tmakinde\ExpenseTracker\Model\UsersLimits;
@@ -30,7 +29,7 @@ trait CategoryLimitInteraction
         try {
             $this->userLimit->limit_type = $limitType;
             $this->userLimit->amount = $amount;
-            $this->userLimit->currency = data_get(app()->configPath('expense_tracker_config'), 'currency');
+            $this->userLimit->currency = data_get(app()->configPath('expense_tracker_config'), 'currency', 'NGN');
         } catch (\Throwable $ex) {
             throw InvalidModelException::LogError($ex->getMessage());
         }
@@ -42,7 +41,7 @@ trait CategoryLimitInteraction
         try {
             $this->userLimit->user_type = (new \ReflectionClass($user))->getName();
             $this->userLimit->user_id = $user->id;
-            $this->save();
+            $this->userLimit->save();
         } catch (\Throwable $ex) {
             throw InvalidModelException::LogError($ex->getMessage());
         }
