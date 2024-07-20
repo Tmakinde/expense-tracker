@@ -3,6 +3,7 @@ namespace Tmakinde\ExpenseTracker\Tests;
 
 use CreateCategoriesTable;
 use CreateExpensesTable;
+use CreateUserLImitsTable;
 use Tmakinde\ExpenseTracker\Tests\Database\Migrations\CreateUsersTestTable;
 use Tmakinde\ExpenseTracker\Model\Expense;
 use Tmakinde\ExpenseTracker\Model\Category;
@@ -38,6 +39,7 @@ class AppTestCase extends TestbenchTestCase
 
     public static function runMigrationsUp($switch) : void
     {
+        require_once dirname(__DIR__) . '/database/migrations/create_user_limits_table.php';
         require_once dirname(__DIR__) . '/database/migrations/create_categories_table.php';
         require_once dirname(__DIR__) . '/database/migrations/create_expenses_table.php';
         require_once __DIR__ . '/database/migrations/create_users_test_table.php';
@@ -45,8 +47,10 @@ class AppTestCase extends TestbenchTestCase
             (new CreateUsersTestTable())->up();
             (new CreateExpensesTable)->up();
             (new CreateCategoriesTable)->up();
+            (new CreateUserLImitsTable)->up();
         } else {
             (new CreateUsersTestTable)->down();
+            (new CreateUserLImitsTable)->down();
             (new CreateExpensesTable)->down();
             (new CreateCategoriesTable)->down();
         }
@@ -56,7 +60,11 @@ class AppTestCase extends TestbenchTestCase
     protected function executeFixtures() : void
     {
         User::create($this->getUsersFixtureData());
-        Category::create($this->getCategoriesFixtureData());
+
+        foreach ($this->getCategoriesFixtureData() as $category) {
+            Category::create($category);
+        }
+
         foreach ($this->getExpensesFixtureData() as $expense) {
             Expense::create($expense);
         }
@@ -65,10 +73,17 @@ class AppTestCase extends TestbenchTestCase
     protected function getCategoriesFixtureData() : array
     {
         return [
+            [
                 'id' => fake()->randomNumber(1),
                 'name' => fake()->word,
                 'is_active' => 1
-            ];
+            ],
+            [
+                'id' => fake()->randomNumber(1),
+                'name' => fake()->word,
+                'is_active' => 0
+            ]
+        ];
     }
 
     protected function getExpensesFixtureData() : array
@@ -80,6 +95,7 @@ class AppTestCase extends TestbenchTestCase
             $time = fake()->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $expenses[] = [
                 'user_id' => $user->id,
+                'user_type' => (new \ReflectionClass($user))->getName(),
                 'category_id' => $category->id,
                 'amount' => fake()->randomNumber(4),
                 'currency' => fake()->currencyCode,
