@@ -31,7 +31,7 @@ Key packages features include:
 You can install the package via composer:
 
 ```bash
-composer require tmakinde/expensetracker
+composer require tmakinde/expense-tracker
 ```
 
 ## Configuration
@@ -107,6 +107,7 @@ Expense::create([
     'amount' => 1000,
 ]);
 ```
+
 Note: `user_type` is the model of the user, which means it can serve as a polymorphic relationship.
 
 Fetch all user expenses
