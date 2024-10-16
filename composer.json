@@ -52,5 +52,12 @@
         "lint": [
             "@php vendor/bin/phpstan analyse"
         ]
-    }
+    },
+    "extra": {
+        "laravel": {
+          "providers": [
+            "Tmakinde\\ExpenseTracker\\ExpenseServiceProvider"
+          ]
+        }
+      }
 }
