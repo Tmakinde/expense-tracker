@@ -40,17 +40,35 @@ Publish the configuration file using the following command:
 Migration:
 
 ```bash
-php artisan vendor:publish --provider="Tmakinde\Expensetracker\ExpenseServiceProvider" --tag="expenses-migrations"
+php artisan vendor:publish --provider="Tmakinde\ExpenseTracker\ExpenseServiceProvider --tag="expenses-migrations"
 ```
 
 Config:
 
 ```bash
-php artisan vendor:publish --provider="Tmakinde\Expensetracker\ExpenseServiceProvider"
---tag="expenses-config"
+php artisan vendor:publish --provider="Tmakinde\ExpenseTracker\ExpenseServiceProvider --tag="expenses-config"
 ```
 
+Execute migration
+```bash
+php artisan migrate --path=/database/migrations/expenses
+```
 ## Usage
+
+### Users
+Users are the actual users that can add expenses to their expense list.
+
+To be able to use certain methods in the users model, you need to add trait `UserLimitInteraction`, `UserCategoryInteraction`  to the user model.
+
+```php
+use Tmakinde\ExpenseTracker\Trait\UserCategoryInteraction;
+use Tmakinde\ExpenseTracker\Trait\UserLimitInteraction;
+
+class User extends Model
+{
+    use UserLimitInteraction, UserCategoryInteraction;
+}
+```
 
 ### Category
 Category are the different types of expenses that a user can add to their expense list. You can create a category using the following command:
@@ -142,21 +160,6 @@ use Tmakinde\ExpenseTracker\Facade\ExpenseRequest;
 ExpenseRequest::for($user)->groupByCategory()->get();
 ```
 
-### Users
-Users are the actual users that can add expenses to their expense list.
-
-To be able to use certain methods in the users model, you need to add trait `UserLimitInteraction`, `UserCategoryInteraction`  to the user model.
-
-```php
-use Tmakinde\ExpenseTracker\Trait\UserCategoryInteraction;
-use Tmakinde\ExpenseTracker\Trait\UserLimitInteraction;
-
-class User extends Model
-{
-    use UserLimitInteraction, UserCategoryInteraction;
-}
-```
-
 ### Limit
 Limits are the maximum amount of expenses that a user can spend on a category for a particular time period. You can create a limit using the following command:
 
@@ -166,7 +169,7 @@ use Tmakinde\ExpenseTracker\Model\Category;
 use Tmakinde\ExpenseTracker\Enum\LimitType;
 
 $category = Category::find(1);
-$category->createLimit(LimitType::Daily)->for($user)
+$category->createLimit(LimitType::Daily, 500)->for($user)
 
 // create limit using the user model
 
