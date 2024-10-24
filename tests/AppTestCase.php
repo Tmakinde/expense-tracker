@@ -39,9 +39,9 @@ class AppTestCase extends TestbenchTestCase
 
     public static function runMigrationsUp($switch) : void
     {
-        require_once dirname(__DIR__) . '/database/migrations/create_user_limits_table.php';
-        require_once dirname(__DIR__) . '/database/migrations/create_categories_table.php';
-        require_once dirname(__DIR__) . '/database/migrations/create_expenses_table.php';
+        require_once dirname(__DIR__) . '/database/migrations/2024_08_18_020912_create_user_limits_table.php';
+        require_once dirname(__DIR__) . '/database/migrations/2024_08_18_020910_create_categories_table.php';
+        require_once dirname(__DIR__) . '/database/migrations/2024_08_18_020911_create_expenses_table.php';
         require_once __DIR__ . '/database/migrations/create_users_test_table.php';
         if ($switch == 'up') {
             (new CreateUsersTestTable())->up();
