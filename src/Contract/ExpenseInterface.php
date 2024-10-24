@@ -1,8 +1,8 @@
 <?php
 namespace Tmakinde\ExpenseTracker\Contract;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 interface ExpenseInterface {
-    public function category() : HasMany;
+    public function categories() : BelongsTo;
 }

@@ -25,15 +25,15 @@ class CategoryQueryBuilder implements CategoryQueryBuilderInterface
 
     public function whereLimitType(string $type) : self
     {
-        $this->model = $this->model->whereHas('users_limits', function($query) use ($type) {
-            $query->where('type', $type);
+        $this->model = $this->model->whereHas('limit', function($query) use ($type) {
+            $query->where('limit_type', $type);
         });
         return $this;
     }
 
     public function whereLimitAmountBetween(int $min, int $max): self
     {
-        $this->model = $this->model->whereHas('users_limits', function($query) use ($min, $max) {
+        $this->model = $this->model->whereHas('limit', function($query) use ($min, $max) {
             $query->whereBetween('amount', [$min, $max]);
         });
         return $this;

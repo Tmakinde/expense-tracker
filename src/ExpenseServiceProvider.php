@@ -2,6 +2,7 @@
 
 namespace Tmakinde\ExpenseTracker;
 use Tmakinde\ExpenseTracker\ExpenseManager;
+use Illuminate\Foundation\Application;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -13,7 +14,7 @@ class ExpenseServiceProvider extends ServiceProvider {
         ], 'expenses-migrations');
 
         $this->publishes([
-            __DIR__ . '/config' => config_path('config/expenses')
+            __DIR__ . '/config' => config_path('expenses')
         ], 'expenses-config');
     }
 

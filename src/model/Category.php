@@ -2,13 +2,12 @@
 
 namespace Tmakinde\ExpenseTracker\Model;
 use Tmakinde\ExpenseTracker\Model\Expense;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Tmakinde\ExpenseTracker\Trait\CategoryLimitInteraction;
 use Tmakinde\ExpenseTracker\Enum\CategoryStatus;
 use Illuminate\Database\Eloquent\Builder;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Category extends Model
 {
@@ -18,9 +17,14 @@ class Category extends Model
 
     protected $guarded = ['id'];
 
-    public function expenses() : BelongsTo
+    public function expenses() : HasMany
     {
-        return $this->belongsTo(Expense::class);
+        return $this->hasMany(Expense::class);
+    }
+
+    public function limit() : HasOne
+    {
+        return $this->hasOne(UsersLimits::class);
     }
 
     public function getCategoryStatus(Model $user)
